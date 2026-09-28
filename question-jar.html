@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question Jar</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap');
+
+:root {
+    --cream: #fffaf6;
+    --white: #fffdfb;
+    --text: #40383b;
+    --muted: #8b7d80;
+    --pink: #d97889;
+    --pink-light: #f6dfe3;
+    --border: #eadedb;
+    --shadow: 0 20px 60px rgba(100, 70, 70, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "DM Sans", sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 15% 15%, rgba(246, 223, 227, .65), transparent 28%),
+        radial-gradient(circle at 85% 20%, rgba(244, 216, 117, .12), transparent 25%),
+        var(--cream);
+}
+
+.app {
+    width: min(900px, 92vw);
+    min-height: 100vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 55px 0 45px;
+}
+
+h1 {
+    margin: 0;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(54px, 8vw, 82px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    transform: translateY(130px);
+}
+
+h1 span {
+    color: var(--pink);
+}
+
+.game {
+    flex: 1;
+    width: 100%;
+    min-height: 650px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.jar-wrap {
+    position: relative;
+    z-index: 2;
+    width: 250px;
+    height: 275px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform .2s ease;
+}
+
+.jar-wrap:hover {
+    transform: translateY(-5px);
+}
+
+.jar-wrap:active {
+    transform: scale(.97);
+}
+
+.jar-shadow {
+    position: absolute;
+    bottom: 0;
+    left: 25px;
+    width: 200px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(120, 81, 76, .15);
+    filter: blur(13px);
+}
+
+.jar {
+    position: absolute;
+    left: 25px;
+    bottom: 16px;
+    width: 200px;
+    height: 230px;
+    overflow: hidden;
+    border: 3px solid rgba(180, 150, 145, .52);
+    border-top: 0;
+    border-radius: 28px 28px 48px 48px;
+    background: rgba(255,255,255,.3);
+    box-shadow:
+        inset 9px 0 20px rgba(255,255,255,.62),
+        inset -10px 0 24px rgba(203,158,164,.12),
+        0 18px 36px rgba(125,86,87,.1);
+    backdrop-filter: blur(5px);
+}
+
+.jar::before {
+    content: "";
+    position: absolute;
+    inset: 10px 12px 0;
+    border-left: 2px solid rgba(255,255,255,.7);
+    border-radius: 25px;
+}
+
+.lid {
+    position: absolute;
+    z-index: 3;
+    left: 18px;
+    top: 9px;
+    width: 214px;
+    height: 43px;
+    border-radius: 13px;
+    background: linear-gradient(#d9b58c, #bd966c);
+    border: 2px solid #aa8158;
+    box-shadow: 0 5px 8px rgba(92,62,43,.16);
+}
+
+.lid::after {
+    content: "";
+    position: absolute;
+    left: 7px;
+    right: 7px;
+    bottom: -5px;
+    height: 9px;
+    border-radius: 0 0 9px 9px;
+    background: #c39a6d;
+}
+
+.papers {
+    position: absolute;
+    inset: 78px 15px 10px;
+}
+
+.paper {
+    position: absolute;
+    width: 62px;
+    height: 43px;
+    border-radius: 5px;
+    box-shadow: 0 3px 7px rgba(85,62,62,.09);
+}
+
+.p1 { background:#f6b6c0; left:14px; top:30px; transform:rotate(-12deg); }
+.p2 { background:#d2e0bc; left:70px; top:14px; transform:rotate(7deg); }
+.p3 { background:#f3dd88; left:112px; top:34px; transform:rotate(-5deg); }
+.p4 { background:#efc6d1; left:42px; top:68px; transform:rotate(13deg); }
+.p5 { background:#cbdcae; left:105px; top:76px; transform:rotate(-14deg); }
+.p6 { background:#f2d69d; left:8px; top:91px; transform:rotate(8deg); }
+
+.stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.star {
+    position: absolute;
+    color: #d98a98;
+    opacity: .48;
+    font-family: Georgia, serif;
+    line-height: 1;
+}
+
+.star-1 {
+    left: 17%;
+    top: 19%;
+    font-size: 22px;
+    transform: rotate(10deg);
+}
+
+.star-2 {
+    left: 25%;
+    bottom: 23%;
+    font-size: 15px;
+    opacity: .35;
+    transform: rotate(-8deg);
+}
+
+.star-3 {
+    right: 17%;
+    top: 24%;
+    font-size: 18px;
+    opacity: .42;
+    transform: rotate(-12deg);
+}
+
+.star-4 {
+    right: 24%;
+    bottom: 21%;
+    font-size: 24px;
+    opacity: .32;
+    transform: rotate(8deg);
+}
+
+@media (max-width: 650px) {
+    .star-1 { left: 7%; }
+    .star-2 { left: 12%; }
+    .star-3 { right: 7%; }
+    .star-4 { right: 12%; }
+}
+
+.card-area {
+    position: relative;
+    z-index: 2;
+    width: min(700px, 90vw);
+    min-height: 185px;
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.empty {
+    text-align: center;
+    color: transparent;
+    min-height: 20px;
+}
+
+.card {
+    width: 100%;
+    padding: 30px 40px 25px;
+    background: rgba(255,253,251,.95);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    animation: cardIn .4s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.question {
+    margin: 0 auto;
+    max-width: 590px;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(23px, 3.3vw, 31px);
+    line-height: 1.35;
+    font-weight: 500;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.action {
+    padding: 10px 18px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: white;
+    color: #76676a;
+    font: 600 12px "DM Sans", sans-serif;
+    cursor: pointer;
+    transition: .18s ease;
+}
+
+.action:hover {
+    transform: translateY(-2px);
+    border-color: #dfb9bf;
+    color: var(--pink);
+    background: #fff9f9;
+}
+
+.skip {
+    color: #9c6d75;
+}
+
+@media (max-width: 650px) {
+    .app {
+        padding-top: 35px;
+    }
+
+    .game {
+        min-height: 590px;
+    }
+
+    .jar-wrap {
+        transform: scale(.88);
+    }
+
+    .jar-wrap:hover {
+        transform: scale(.88) translateY(-4px);
+    }
+
+    .card {
+        padding: 25px 20px 22px;
+        border-radius: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main class="app">
+
+    <h1>Question <span>Jar</span></h1>
+
+    <section class="game">
+
+        <div class="stars" aria-hidden="true">
+            <span class="star star-1">✦</span>
+            <span class="star star-2">✧</span>
+            <span class="star star-3">✦</span>
+            <span class="star star-4">✧</span>
+        </div>
+
+        <div
+            class="jar-wrap"
+            id="jar"
+            role="button"
+            tabindex="0"
+            aria-label="Pick a random question"
+        >
+            <div class="jar-shadow"></div>
+
+            <div class="lid"></div>
+
+            <div class="jar">
+                <div class="papers">
+                    <i class="paper p1"></i>
+                    <i class="paper p2"></i>
+                    <i class="paper p3"></i>
+                    <i class="paper p4"></i>
+                    <i class="paper p5"></i>
+                    <i class="paper p6"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-area" id="cardArea">
+            <div class="empty">.</div>
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+
+const questions = ["What’s a small thing that always puts you in a good mood?", "If you had a whole day free, what would you do?", "What’s a weird little habit you have?", "What food can always make you happy?", "If you could go anywhere right now, where would you go?", "What’s something random you’ve been into lately?", "Are you more of a late-night talker or an early bird?", "What song have you been listening to on repeat lately?", "If your friends had to describe you in three words, what would they be?", "What’s one little thing you look forward to every day?", "What’s something you really appreciate about other people?", "When was the last time you felt really proud of yourself?", "What’s something about yourself you’re trying to improve?", "What makes someone easy to talk to, in your opinion?", "What’s a small gesture that makes you feel cared for?", "Who has had the biggest influence on who you are today?", "What’s something about you that people usually take time to understand?", "What matters most to you in a close relationship?", "What’s been on your mind a lot lately?", "When do you feel most like yourself?", "What’s your biggest fear about the future?", "If you could tell your younger self one thing, what would it be?", "What’s something you find hard to open up about?", "What’s a part of yourself you wish someone could understand better?", "What experience has changed the way you see life the most?", "What do you think makes a life feel meaningful?", "What’s something you hope never changes about you?", "What kind of person do you want to become?", "What’s something you’ve learned about yourself through a difficult time?", "What does feeling truly understood mean to you?"];
+
+let remaining = [...questions];
+let current = null;
+
+const jar = document.getElementById("jar");
+const cardArea = document.getElementById("cardArea");
+
+function pickQuestion() {
+
+    if (remaining.length === 0) {
+        remaining = [...questions];
+    }
+
+    let pool = remaining;
+
+    if (current && remaining.length > 1) {
+        pool = remaining.filter(question => question !== current);
+    }
+
+    const question =
+        pool[Math.floor(Math.random() * pool.length)];
+
+    remaining =
+        remaining.filter(item => item !== question);
+
+    current = question;
+
+    renderQuestion(question);
+}
+
+function renderQuestion(question) {
+
+    cardArea.innerHTML = `
+        <article class="card" aria-live="polite">
+
+            <p class="question">
+                ${escapeHtml(question)}
+            </p>
+
+            <div class="card-footer">
+
+                <button
+                    class="action skip"
+                    id="skipBtn"
+                    type="button"
+                >
+                    Skip
+                </button>
+
+                <button
+                    class="action"
+                    id="nextBtn"
+                    type="button"
+                >
+                    Next
+                </button>
+
+            </div>
+
+        </article>
+    `;
+
+    document
+        .getElementById("skipBtn")
+        .addEventListener("click", pickQuestion);
+
+    document
+        .getElementById("nextBtn")
+        .addEventListener("click", pickQuestion);
+}
+
+function escapeHtml(text) {
+
+    return text.replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[character]);
+
+}
+
+jar.addEventListener("click", pickQuestion);
+
+jar.addEventListener("keydown", event => {
+
+    if (event.key === "Enter" || event.key === " ") {
+
+        event.preventDefault();
+
+        pickQuestion();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
